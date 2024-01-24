@@ -1,30 +1,24 @@
-import java.util.concurrent.ExecutorService;
+import java.util.UUID;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class Musician {
-    private final static String IPADDRESS = "239.255.22.5";
-    private final static int PORT = 9904;
-
     public static void main(String[] args) {
-        if (args.length != 1) throw RuntimeException("Invalid arguments")
+        if (args.length != 1) throw new RuntimeException("Invalid arguments");
 
-        instrument = Instrument.valueOf(args[0]);
-        if (instrument == null) throw RuntimeException("Invalid instrument")
+        Instrument instrument = Instrument.valueOf(args[0]);
+        if (instrument == null) throw new RuntimeException("Invalid instrument");
 
-        try (DatagramSocket socket = new DatagramSocket()) {
-            String message = String.format("{\"uuid\": \"%s\", \"sound\": \"%s\"", UUID.randomUUID(), instrument.sound()}
-            byte[] payload = message.getBytes(UTF_8);
-            InetSocketAddress dest_address = new InetSocketAddress(IPADDRESS, PORT);
-            var packet = new DatagramPacket(payload, payload.length, dest_address);
-            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-            Runnable toRun = new Runnable() {
-                public void run() {
-                    socket.send(packet);
-                }
-            };
-            ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(toRun, 1, 1, TimeUnit.SECONDS);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+        String message = String.format("{\"uuid\": \"%s\", \"sound\": \"%s\"", UUID.randomUUID(), instrument.sound());
+
+        try (ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1)) {
+            Runnable UDPSender = new UDPSender(message);
+            ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(UDPSender, 1, 1, TimeUnit.SECONDS);
+        } catch (RuntimeException e) {
+            System.out.println("Error musician: " + e.getMessage());
         }
+
     }
 }

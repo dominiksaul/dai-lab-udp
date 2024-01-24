@@ -1,34 +1,24 @@
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.InetSocketAddress;
-import java.net.MulticastSocket;
-import java.net.NetworkInterface;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 
 public class UDPSender implements Runnable {
     private final static String IPADDRESS = "239.255.22.5";
     private final static int PORT = 9904;
-    private final Orchestra orchestra;
+    private final String message;
+    private final byte[] payload;
 
-    public UDPSender(Orchestra orchestra) {
-        this.orchestra = orchestra;
+    private final DatagramPacket packet;
+
+    public UDPSender(String m) {
+        this.message = m;
+        this.payload = message.getBytes(StandardCharsets.UTF_8);
+        this.packet = new DatagramPacket(payload, payload.length, new InetSocketAddress(IPADDRESS, PORT));
     }
 
     public void run() {
-        try (MulticastSocket socket = new MulticastSocket(PORT)) {
-            InetSocketAddress group_address = new InetSocketAddress(IPADDRESS, PORT);
-            NetworkInterface netif = NetworkInterface.getByName("eth0");
-            socket.joinGroup(group_address, netif);
-
-            byte[] buffer = new byte[1024];
-            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-            while (true) {
-                socket.receive(packet);
-                String message = new String(packet.getData(), 0, packet.getLength(), StandardCharsets.UTF_8);
-                orchestra.registerMusician(message);
-                System.out.println("Received message: " + message + " from " + packet.getAddress() + ", port " + packet.getPort());
-            }
-            // socket.leaveGroup(group_address, netif);
+        try (DatagramSocket socket = new DatagramSocket()) {
+            socket.send(packet);
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
