@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>ch.heig.dai.lab.udp.api</groupId>
-    <artifactId>Auditor</artifactId>
+    <groupId>ch.heig.dai.lab.http.api</groupId>
+    <artifactId>Server</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
@@ -25,7 +25,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>Auditor</mainClass>
+                            <mainClass>ch.heig.dai.lab.http.api.Server</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -35,4 +35,23 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- library dependencies -->
+    <dependencies>
+        <dependency>
+            <groupId>io.javalin</groupId>
+            <artifactId>javalin</artifactId>
+            <version>5.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.7</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.0</version>
+        </dependency>
+    </dependencies>
 </project>
