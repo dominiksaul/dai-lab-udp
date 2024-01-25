@@ -1,5 +1,7 @@
-FROM alpine:latest
-RUN apk add --no-cache openjdk20
+FROM maven:3-eclipse-temurin-21-alpine
 WORKDIR /app
-COPY target/*.jar /app/app.jar
-CMD ["java", "-jar", "app.jar"]
+COPY src /app/src
+COPY pom.xml /app/pom.xml
+RUN mvn clean compile assembly:single
+RUN mv /app/target/*.jar app.jar
+CMD ["java", "-jar", "app-jar-with-dependencies.jar"]

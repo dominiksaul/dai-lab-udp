@@ -25,8 +25,8 @@ public class UDPListener implements Runnable {
             while (true) {
                 socket.receive(packet);
                 String message = new String(packet.getData(), 0, packet.getLength(), StandardCharsets.UTF_8);
-                orchestra.registerMusician(message);
                 System.out.println("Received message: " + message + " from " + packet.getAddress() + ", port " + packet.getPort());
+                orchestra.registerMusician(message);
             }
             // socket.leaveGroup(group_address, netif);
         } catch (IOException ex) {

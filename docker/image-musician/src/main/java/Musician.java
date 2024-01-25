@@ -21,6 +21,7 @@ public class Musician {
             DatagramPacket packet = new DatagramPacket(payload, payload.length, dest_address);
 
             while (true) {
+                System.out.println(message);
                 socket.send(packet);
                 Thread.sleep(Duration.ofSeconds(5));
             }

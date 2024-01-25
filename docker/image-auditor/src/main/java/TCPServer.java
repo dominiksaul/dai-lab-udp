@@ -16,6 +16,7 @@ public class TCPServer implements Runnable {
             while (true) {
                 try (Socket socket = serverSocket.accept();
                      var out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), UTF_8))) {
+                    System.out.println("TCP Server request received");
                     out.write(orchestra.getActiveMusicians());
                 } catch (IOException e) {
                     System.out.println("Server: socket ex.: " + e);
