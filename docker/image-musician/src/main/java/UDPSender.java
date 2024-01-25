@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 public class UDPSender implements Runnable {
     private final static String IPADDRESS = "239.255.22.5";
@@ -18,9 +19,14 @@ public class UDPSender implements Runnable {
 
     public void run() {
         try (DatagramSocket socket = new DatagramSocket()) {
-            socket.send(packet);
+            while(true) {
+                socket.send(packet);
+                Thread.sleep(Duration.ofSeconds(5));
+            }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }
