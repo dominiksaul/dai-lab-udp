@@ -14,26 +14,18 @@ public class Musician {
         if (args.length != 1) throw new IllegalArgumentException("Invalid arguments");
         Instrument instrument = Instrument.valueOf(args[0]);
 
-        String message = String.format("{\"uuid\": \"%s\", \"sound\": \"%s\"", UUID.randomUUID(), instrument.sound());
-
-        byte[] payload = message.getBytes(StandardCharsets.UTF_8);
-        DatagramPacket packet = new DatagramPacket(payload, payload.length, new InetSocketAddress(IPADDRESS, PORT));
-
         try (DatagramSocket socket = new DatagramSocket()) {
+            String message = String.format("{\"uuid\": \"%s\", \"sound\": \"%s\"", UUID.randomUUID(), instrument.sound());
+            byte[] payload = message.getBytes(StandardCharsets.UTF_8);
+            InetSocketAddress dest_address = new InetSocketAddress(IPADDRESS, PORT);
+            DatagramPacket packet = new DatagramPacket(payload, payload.length, dest_address);
+
             while (true) {
                 socket.send(packet);
                 Thread.sleep(Duration.ofSeconds(5));
             }
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (IOException | InterruptedException e) {
+            System.out.println(e.getMessage());
         }
-
-        /* try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
-            executor.execute(new UDPSender(message));
-        } catch (RuntimeException e) {
-            System.out.println("Error musician: " + e.getMessage());
-        } */
     }
 }
