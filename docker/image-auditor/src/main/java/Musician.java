@@ -38,4 +38,16 @@ public class Musician {
     public int hashCode() {
         return Objects.hash(uuid, instrument);
     }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public Instrument getInstrument() {
+        return instrument;
+    }
+
+    public LocalDateTime getLastActivity() {
+        return lastActivity;
+    }
 }

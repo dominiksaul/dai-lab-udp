@@ -22,15 +22,18 @@ public class UDPListener implements Runnable {
 
             byte[] buffer = new byte[1024];
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+
             while (true) {
                 socket.receive(packet);
                 String message = new String(packet.getData(), 0, packet.getLength(), StandardCharsets.UTF_8);
                 System.out.println("Received message: " + message + " from " + packet.getAddress() + ", port " + packet.getPort());
                 orchestra.registerMusician(message);
+                System.out.println("test");
+                packet.setLength(buffer.length);
             }
             // socket.leaveGroup(group_address, netif);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+        } catch (Exception e) {
+            System.out.println((e.getMessage()));
         }
     }
 }
