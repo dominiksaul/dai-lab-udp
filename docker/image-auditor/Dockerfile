@@ -4,4 +4,4 @@ COPY src /app/src
 COPY pom.xml /app/pom.xml
 RUN mvn clean compile assembly:single
 RUN mv /app/target/*.jar app.jar
-CMD ["java", "-jar", "app-jar-with-dependencies.jar"]
+CMD ["java", "-jar", "app.jar"]
