@@ -23,7 +23,9 @@ public class Musician {
 
             while (true) {
 
-                String message = String.format("{\"uuid\": \"%s\", \"sound\": \"%s\", \"lastActivity\" : %s}", UUID.randomUUID(), instrument.sound(), LocalDateTime.now());
+                //String message = String.format("{\"uuid\": \"%s\", \"sound\": \"%s\", \"lastActivity\" : %s}", UUID.randomUUID(), instrument.sound(), LocalDateTime.now());
+                //To not send LocaleDateTime since gson doesn't natively knows how to change it
+                String message = String.format("{\"uuid\": \"%s\", \"sound\": \"%s\"}", UUID.randomUUID(), instrument.sound());
             byte[] payload = message.getBytes(StandardCharsets.UTF_8);
             InetSocketAddress dest_address = new InetSocketAddress(IPADDRESS, PORT);
             DatagramPacket packet = new DatagramPacket(payload, payload.length, dest_address);
