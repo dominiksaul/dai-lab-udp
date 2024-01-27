@@ -4,17 +4,39 @@ import java.lang.reflect.Type;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Orchestra {
-    private static final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+    /*private static final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
         @Override
         public LocalDateTime deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
             Instant instant = Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong());
             return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
         }
-    }).create();
+    }).create();*/
+
+    private final Gson gson;
     private final Set<Musician> musicians = new HashSet<>();
+
+    public Orchestra() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+            @Override
+            public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                    throws JsonParseException {
+                return LocalDateTime.parse(json.getAsString(),
+                        DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss").withLocale(Locale.ENGLISH));
+            }
+        });
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new JsonSerializer<LocalDateTime>() {
+            @Override
+            public JsonElement serialize(LocalDateTime localDateTime, Type srcType, JsonSerializationContext context) {
+                return new JsonPrimitive(DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss").format(localDateTime));
+            }
+        });
+        gson = gsonBuilder.setPrettyPrinting().create();
+    }
 
     public void registerMusician(String message) {
         //musicians.add(gson.fromJson(message, Musician.class));

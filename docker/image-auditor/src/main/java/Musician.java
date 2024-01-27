@@ -7,7 +7,8 @@ public class Musician {
     private final Instrument instrument;
 
     //To dodge the problem with serializing LocalDateTime
-    private transient LocalDateTime lastActivity;
+    //private transient LocalDateTime lastActivity;
+    private final LocalDateTime lastActivity;
 
     public Musician(String uuid, String sound) {
         this.uuid = uuid;
@@ -19,14 +20,14 @@ public class Musician {
         return lastActivity.plus(Duration.ofSeconds(5)).isAfter(LocalDateTime.now());
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "{" +
                 "\"uuid\"=\"" + uuid + "\", " +
                 "\"instrument\"=\"" + instrument + "\", " +
                 "\"lastActivity\"=" + lastActivity +
                 "}";
-    }
+    }*/
 
     @Override
     public boolean equals(Object o) {
@@ -41,7 +42,7 @@ public class Musician {
         return Objects.hash(uuid, instrument);
     }
 
-    public String getUuid() {
+    /*public String getUuid() {
         return uuid;
     }
 
@@ -51,9 +52,9 @@ public class Musician {
 
     public LocalDateTime getLastActivity() {
         return lastActivity;
-    }
+    }*/
 
-    public void setLastActivity(LocalDateTime lastActivity) {
+    /* public void setLastActivity(LocalDateTime lastActivity) {
         this.lastActivity = lastActivity;
-    }
+    } */
 }

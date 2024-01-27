@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -11,7 +12,7 @@ import java.util.UUID;
 public class Musician {
     private final static String IPADDRESS = "239.255.22.5";
     private final static int PORT = 9904;
-    private final static Gson gson = new Gson();
+    private final static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public static void main(String[] args) {
         if (args.length != 1) throw new IllegalArgumentException("Invalid arguments");
