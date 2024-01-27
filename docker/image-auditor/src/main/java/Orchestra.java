@@ -15,7 +15,7 @@ public class Orchestra {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (localDateTime, srcType, context) -> new JsonPrimitive(DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss").format(localDateTime)));
         // Only used for alternative solution where musician sends Date/Time of his last activity
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss")));
+        // gsonBuilder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss")));
         gson = gsonBuilder.setPrettyPrinting().create();
     }
 
@@ -37,7 +37,7 @@ public class Orchestra {
                     m.setLastActivity();
 
                     // Alternative solution where musician sends Date/Time of his last activity
-                    // m.setLastActivity(musicianMessage.lastActivity);
+                    // m.setLastActivity(musicianMessage.lastActivity());
                 }
             }
         }

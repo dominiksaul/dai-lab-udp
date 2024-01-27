@@ -21,10 +21,12 @@ public class Musician {
     public static void main(String[] args) {
         if (args.length != 1) throw new IllegalArgumentException("Invalid arguments");
         Instrument instrument = Instrument.valueOf(args[0]);
+        String uuid = UUID.randomUUID().toString();
+        String sound = instrument.sound();
 
         try (DatagramSocket socket = new DatagramSocket()) {
             // Solution where musician doesn't send Date/Time of his last activity
-            MusicianMessage musicianMessage = new MusicianMessage(UUID.randomUUID().toString(), instrument.sound());
+            MusicianMessage musicianMessage = new MusicianMessage(uuid, sound);
             String message = gson.toJson(musicianMessage);
             byte[] payload = message.getBytes(StandardCharsets.UTF_8);
             InetSocketAddress dest_address = new InetSocketAddress(IPADDRESS, PORT);
@@ -33,12 +35,12 @@ public class Musician {
             while (true) {
                 /*
                 // Alternative solution where musician sends Date/Time of his last activity
-                MusicianMessage musicianMessage = new MusicianMessage(UUID.randomUUID().toString(), instrument.sound(), LocalDateTime.now());
+                MusicianMessage musicianMessage = new MusicianMessage(uuid, sound, LocalDateTime.now());
                 String message = gson.toJson(musicianMessage);
                 byte[] payload = message.getBytes(StandardCharsets.UTF_8);
                 InetSocketAddress dest_address = new InetSocketAddress(IPADDRESS, PORT);
                 DatagramPacket packet = new DatagramPacket(payload, payload.length, dest_address);
-                 */
+                */
 
                 System.out.println(message);
                 socket.send(packet);
