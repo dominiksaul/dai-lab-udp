@@ -5,7 +5,9 @@ import java.util.Objects;
 public class Musician {
     private final String uuid;
     private final Instrument instrument;
-    private LocalDateTime lastActivity;
+
+    //To dodge the problem with serializing LocalDateTime
+    private transient LocalDateTime lastActivity;
 
     public Musician(String uuid, String sound) {
         this.uuid = uuid;
@@ -49,5 +51,9 @@ public class Musician {
 
     public LocalDateTime getLastActivity() {
         return lastActivity;
+    }
+
+    public void setLastActivity(LocalDateTime lastActivity) {
+        this.lastActivity = lastActivity;
     }
 }
