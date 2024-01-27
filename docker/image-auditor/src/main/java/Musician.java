@@ -5,29 +5,25 @@ import java.util.Objects;
 public class Musician {
     private final String uuid;
     private final Instrument instrument;
+    private LocalDateTime lastActivity;
 
-    //To dodge the problem with serializing LocalDateTime
-    //private transient LocalDateTime lastActivity;
-    private final LocalDateTime lastActivity;
-
+    // Solution where musician doesn't send Date/Time of his last activity
     public Musician(String uuid, String sound) {
         this.uuid = uuid;
         this.instrument = Instrument.getInstrumentWithSound(sound);
         this.lastActivity = LocalDateTime.now();
     }
 
+    // Alternative solution where musician sends Date/Time of his last activity
+    public Musician(String uuid, String sound, LocalDateTime lastActivity) {
+        this.uuid = uuid;
+        this.instrument = Instrument.getInstrumentWithSound(sound);
+        this.lastActivity = lastActivity;
+    }
+
     public boolean isActive() {
         return lastActivity.plus(Duration.ofSeconds(5)).isAfter(LocalDateTime.now());
     }
-
-    /*@Override
-    public String toString() {
-        return "{" +
-                "\"uuid\"=\"" + uuid + "\", " +
-                "\"instrument\"=\"" + instrument + "\", " +
-                "\"lastActivity\"=" + lastActivity +
-                "}";
-    }*/
 
     @Override
     public boolean equals(Object o) {
@@ -42,19 +38,13 @@ public class Musician {
         return Objects.hash(uuid, instrument);
     }
 
-    /*public String getUuid() {
-        return uuid;
+    // Solution where musician doesn't send Date/Time of his last activity
+    public void setLastActivity() {
+        this.lastActivity = LocalDateTime.now();
     }
 
-    public Instrument getInstrument() {
-        return instrument;
-    }
-
-    public LocalDateTime getLastActivity() {
-        return lastActivity;
-    }*/
-
-    /* public void setLastActivity(LocalDateTime lastActivity) {
+    // Alternative solution where musician sends Date/Time of his last activity
+    public void setLastActivity(LocalDateTime lastActivity) {
         this.lastActivity = lastActivity;
-    } */
+    }
 }

@@ -8,50 +8,38 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Orchestra {
-    /*private static final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
-        @Override
-        public LocalDateTime deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            Instant instant = Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong());
-            return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-        }
-    }).create();*/
-
     private final Gson gson;
     private final Set<Musician> musicians = new HashSet<>();
 
     public Orchestra() {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
-            @Override
-            public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                    throws JsonParseException {
-                return LocalDateTime.parse(json.getAsString(),
-                        DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss").withLocale(Locale.ENGLISH));
-            }
-        });
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new JsonSerializer<LocalDateTime>() {
-            @Override
-            public JsonElement serialize(LocalDateTime localDateTime, Type srcType, JsonSerializationContext context) {
-                return new JsonPrimitive(DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss").format(localDateTime));
-            }
-        });
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (localDateTime, srcType, context) -> new JsonPrimitive(DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss").format(localDateTime)));
+        // Only used for alternative solution where musician sends Date/Time of his last activity
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss")));
         gson = gsonBuilder.setPrettyPrinting().create();
     }
 
     public void registerMusician(String message) {
-        //musicians.add(gson.fromJson(message, Musician.class));
-        //Extremely dirty way gson doesn't call the Musician constructor properly, needs a custom deserializer for gson
-        String uuid = message.substring(message.indexOf("uuid") + 8, message.indexOf(",") - 1);
-        String sound = message.substring(message.indexOf("sound") + 9, message.lastIndexOf("\""));
-        boolean alreadyRegistered = false;
-        for (Musician m : musicians) {
-            if (Objects.equals(m.getUuid(), uuid)) {
-                m.setLastActivity(LocalDateTime.now());
-                alreadyRegistered = true;
+        MusicianMessage musicianMessage = gson.fromJson(message, MusicianMessage.class);
+
+        // Solution where musician doesn't send Date/Time of his last activity
+        Musician musician = new Musician(musicianMessage.uuid(), musicianMessage.sound());
+
+        // Alternative solution where musician sends Date/Time of his last activity
+        // Musician musician = new Musician(musicianMessage.uuid(), musicianMessage.sound(), musicianMessage.lastActivity());
+
+        if (!musicians.contains(musician)) {
+            musicians.add(musician);
+        } else {
+            for (var m : musicians) {
+                if (m.equals(musician)){
+                    // Solution where musician doesn't send Date/Time of his last activity
+                    m.setLastActivity();
+
+                    // Alternative solution where musician sends Date/Time of his last activity
+                    // m.setLastActivity(musicianMessage.lastActivity);
+                }
             }
-        }
-        if (!alreadyRegistered) {
-            musicians.add(new Musician(uuid, sound));
         }
     }
 
