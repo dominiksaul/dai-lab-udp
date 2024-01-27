@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -19,7 +20,6 @@ public class Musician {
         try (DatagramSocket socket = new DatagramSocket()) {
             MusicianSound musicianSound = new MusicianSound(UUID.randomUUID().toString(), instrument.sound());
             String message = gson.toJson(musicianSound);
-            // String message = String.format("{\"uuid\": \"%s\", \"sound\": \"%s\"}", UUID.randomUUID(), instrument.sound());
             byte[] payload = message.getBytes(StandardCharsets.UTF_8);
             InetSocketAddress dest_address = new InetSocketAddress(IPADDRESS, PORT);
             DatagramPacket packet = new DatagramPacket(payload, payload.length, dest_address);
@@ -34,5 +34,6 @@ public class Musician {
         }
     }
 
-    private record MusicianSound(String uuid, String sound) {};
+    private record MusicianSound(String uuid, String sound) {
+    }
 }

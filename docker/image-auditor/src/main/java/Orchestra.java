@@ -19,10 +19,10 @@ public class Orchestra {
     public void registerMusician(String message) {
         //musicians.add(gson.fromJson(message, Musician.class));
         //Extremely dirty way gson doesn't call the Musician constructor properly, needs a custom deserializer for gson
-        String uuid = message.substring(message.indexOf("uuid") + 8, message.indexOf(",")-1);
+        String uuid = message.substring(message.indexOf("uuid") + 8, message.indexOf(",") - 1);
         String sound = message.substring(message.indexOf("sound") + 9, message.lastIndexOf("\""));
         boolean alreadyRegistered = false;
-        for (Musician m : musicians){
+        for (Musician m : musicians) {
             if (Objects.equals(m.getUuid(), uuid)) {
                 m.setLastActivity(LocalDateTime.now());
                 alreadyRegistered = true;
