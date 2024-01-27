@@ -9,8 +9,9 @@ public enum Instrument {
     public String sound() {
         return sound;
     }
+
     static public Instrument getInstrumentWithSound(String sound) {
-        for(var instrument : values()){
+        for (var instrument : values()) {
             if (sound.equals(instrument.sound())) {
                 return instrument;
             }
