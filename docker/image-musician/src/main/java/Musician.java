@@ -27,7 +27,7 @@ public class Musician {
             while (true) {
                 System.out.println(message);
                 socket.send(packet);
-                Thread.sleep(Duration.ofSeconds(5));
+                Thread.sleep(Duration.ofSeconds(1));
             }
         } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());
